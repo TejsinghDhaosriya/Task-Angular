@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Virtual Tour</title>
+    <link rel="stylesheet" href="css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/confo.css">
+    <link rel="shortcut icon" type="image/png" href="/img/enablex.png"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/tether.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/EnxRtc.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/confo.js"></script>
+        <script src="/socket/socket.io.js"></script>
+
+    <link rel="stylesheet" href="css/jquery.toast.css">
+    <style type="text/css">
+    	html, body{height: 100%;}
+		.main_iframe_viewer{display: none;height: 100%;}
+		.main_container_fluid {padding: 0; left: 0; right: 0; top: 0; bottom: 0; width: 100%; height: 100%; }
+		.main_container_fluid .main_col_div{padding: 0;}
+		.video_container_div{height: 100%;}
+		.video_container_div>.row {height: 100%; margin: 0; }
+		#multi_video_container_div {margin-top: 0; width: 100%; height: 100%; }
+		#multi_video_container_div .live_stream_div {float: none; padding: 0 !important; min-height: 100% !important; min-width: 100% !important; }
+		#multi_video_container_div .live_stream_div .vcx_player.classic_vcx_player {height: 100%; }
+		#multi_video_container_div .live_stream_div .vcx_player.classic_vcx_player video {width: 100% !important; height: 100% !important; top: 0 !important; }
+		#local_video_div {/*height: 200px !important;*/ width: 200px !important; float: none !important; padding: 0 !important; margin: 0 !important; position: absolute !important; /* top: 0; */ right: 20px; bottom: 20px; }
+		#local_video_div .vcx_player.classic_vcx_player video {width: 100% !important; height: 100% !important; }
+		#multi_video_container_div .live_stream_div .name-div {display: none;}
+		div#controls-div {position: absolute;left: -100%;margin: 0;right: auto;text-align: center;width: 60px;background: red;/* height: 80px; */}
+		.controls {position: absolute !important; bottom: 20px !important; display: flex; flex-direction: column; align-items: center; justify-content: center; left: 20px; right: auto; width: auto !important; }
+		.controls img {margin: 0 !important;}
+		@media(max-width: 767px){
+			#local_video_div{width: 140px !important;}
+		}
+    </style>
+</head>
+<body>
+ <div id="iframe_div_viewer_id" class="main_iframe_viewer" style="height: 100%;">
+    <iframe id="setMailUrlId" src="https://gopoc.in:3000/viewer?deactivateClientCall=true"  height="100%" width="100%" ></iframe>
+  </div>
+<div class="container-fluid main_container_fluid">
+
+    <div class="col-md-12 main_col_div" style="width: 100%;height:100%;">
+        <div class="video_container_div">
+            <div class="row">
+                    <div id="multi_video_container_div" style="width: 100%;"></div>
+                    <div id="local_video_div" class="col-md-3 col-sm-3"></div>
+            </div>
+        </div>
+        <div class="row" id="controls-div" style="display: none">
+           <!--  <div class="controls" id="controls" style="position: absolute;bottom: 12%;width:100%;text-align: center;z-index: 10000">
+                <img src="../img/mike.png" style="max-width : 50px;margin-right: 20px;cursor: pointer;"
+                     class="cus_img_icon icon-confo-mute" onclick="audioMute()" title="mute audio"/>
+                <img src="../img/video.png" style="max-width : 50px;margin-right: 20px;cursor: pointer;"
+                     class="cus_img_icon icon-confo-video-mute" title="mute video" onclick="videoMute()"/>
+                <img src="../img/end-call.png" style="max-width : 60px;margin-right: 20px;cursor: pointer;" class="cus_img_icon end_call"
+                     title="End_call" onClick="go_back()"/>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+</div>
+ <div class="controls" id="controls" style="position: absolute;bottom: 12%;width:100%;text-align: center;z-index: 10000">
+                <img src="../img/mike.png" style="max-width : 50px;margin-right: 20px;cursor: pointer;"
+                     class="cus_img_icon icon-confo-mute" onclick="audioMute()" title="mute audio"/>
+                <img src="../img/video.png" style="max-width : 50px;margin-right: 20px;cursor: pointer;"
+                     class="cus_img_icon icon-confo-video-mute" title="mute video" onclick="videoMute()"/>
+                <img src="../img/end-call.png" style="max-width : 60px;margin-right: 20px;cursor: pointer;" class="cus_img_icon end_call"
+                     title="End_call" onClick="go_back()"/>
+            </div>
+<script type="text/javascript" src="js/jquery.toast.js"></script>
+<script type="text/javascript">
+   
+var c_meetingId = new URL(window.location.href).searchParams.get("meetingid");
+document.getElementById('setMailUrlId').setAttribute('src','https://gopoc.in:8080/viewer?deactivateClientCall=true&meetingid='+c_meetingId)
+
+//  if(window.location.href.search("call=video") == -1){
+//     document.getElementById('multi_video_container_div').setAttribute('style','display:none !important;')
+//     document.getElementById('local_video_div').setAttribute('style','display:none !important;')
+//     document.getElementById('iframe_div_viewer_id').setAttribute('style','display:block !important;height: 100%;')
+// }else{
+//     document.getElementById('iframe_div_viewer_id').setAttribute('style','display:none !important;')
+//      document.getElementById('multi_video_container_div').setAttribute('style','display:block !important;')
+//     document.getElementById('local_video_div').setAttribute('style','display:block !important;')
+// }
+
+ var socket = io.connect('https://gopoc.in:8080');
+
+socket.on("ClientCallDisconnected", function (payload){
+    console.log('ClientCallDisconnected',payload)
+    if(c_meetingId == payload.meetingid){
+       window.location.href = 'https://gopoc.in:8080/viewer?meetingid='+payload.meetingid;
+    }
+})
+socket.on("ClientSwitchToVideoCall", function (payload){
+        console.log('AgentClientSwitchToVideoCall',payload)
+        if(c_meetingId == payload.meetingid){
+                if(payload.call == 'video'){
+                     document.getElementById('iframe_div_viewer_id').setAttribute('style','display:none !important;')
+                     document.getElementById('multi_video_container_div').setAttribute('style','display:block !important;')
+                    document.getElementById('local_video_div').setAttribute('style','display:block !important;')
+                }else{
+                    document.getElementById('multi_video_container_div').setAttribute('style','display:none !important;')
+                    document.getElementById('local_video_div').setAttribute('style','display:none !important;')
+                    document.getElementById('iframe_div_viewer_id').setAttribute('style','display:block !important;height: 100%;')
+                }
+        }
+})
+       
+        function go_back(){
+                            console.log('c_meetingId',c_meetingId)
+                                socket.emit('CutCallFromWeb',{'meetingid':c_meetingId});
+                        }             
+</script>
+</body>
+</html>

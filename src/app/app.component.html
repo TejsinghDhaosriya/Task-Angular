@@ -1,0 +1,65 @@
+<!-- <mat-form-field>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+ -->
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!-- Position Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> No. 
+      
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef> Email 
+       <div>
+      <mat-form-field>
+  <input matInput class="form-field" [formControl]="emailFilter" placeholder="Email Filter">
+</mat-form-field>
+      </div>
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="last_name">
+    <th mat-header-cell *matHeaderCellDef> Last Name
+    <div>
+      <mat-form-field>
+  <input matInput class="form-field" [formControl]="lastNameFilter" placeholder="Last Name Filter">
+</mat-form-field>
+      </div> </th>
+    <td mat-cell *matCellDef="let element"> {{element.last_name}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="first_name">
+    <th mat-header-cell *matHeaderCellDef> First Name
+
+    <div>
+      <mat-form-field>
+  <input matInput class="form-field" [formControl]="firstNameFilter" placeholder="First Name Filter">
+</mat-form-field>
+      </div>
+
+       </th>
+    <td mat-cell *matCellDef="let element"> {{element.first_name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="avatar">
+    <th mat-header-cell *matHeaderCellDef> Avatar </th>
+    <td mat-cell *matCellDef="let element"> 
+    <img src="{{element.avatar}}"style="width: 100px;height: 100px;"> </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->
